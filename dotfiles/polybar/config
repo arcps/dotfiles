@@ -1,0 +1,384 @@
+[colors]
+background = #00000000
+background-transparent = #0004060e
+foreground = #ccffffff
+foreground-icon = #ccffffff
+#workspace-active = #75757575
+workspace-active = #8800E2B5
+
+[settings]
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+;pseudo-transparency = false
+
+[global/wm]
+margin-top = 0
+margin-bottom = 0
+
+;========================================================================
+;				  bottom-bar
+;========================================================================
+[bar/bottom-bar]
+#monitor = ${env:MONITOR:DVI-I-0}
+width = 100%
+height = 18
+offset-x = 0
+offset-y = 19
+bottom = true
+radius = 0.0
+fixed-center = false
+background = ${colors.background-transparent}
+foreground = ${colors.foreground}
+line-size = 1
+line-color =
+border-size = 
+border-color = 
+padding-left = 0
+padding-right = 0
+module-margin-left = 0
+module-margin-right = 0
+separator = 
+locale = pt_BR.UTF-8
+override-redirect = no
+;wm-restack = 
+;cursor-click = pointer
+;cursor-scroll = pointer
+;enable-ipc = true
+;double-click-left = polybar-msg cmd restart &
+click-left = 
+click-middle = 
+click-right = 
+scroll-up = 
+scroll-down =
+
+; Position of the system tray window
+; If empty or undefined, tray support will be disabled
+; NOTE: A center aligned tray will cover center aligned modules
+;
+; Available positions:
+;   left
+;   center
+;   right
+;   none
+tray-position = none
+
+font-0 = Noto Sans:size=9;2
+font-1 = FontAwesome:pixelsize=10;2
+font-2 = Font Awesome 5 Free Solid:pixelsize=10;2
+font-3 = Font Awesome 5 Free:pixelsize=10;2
+font-4 = Font Awesome 5 Brands:pixelsize=10;2
+font-5 = Material Icons:pixelsize=12;3
+font-6 = Noto Serif:size=9;2
+font-7 = Noto Serif:bold:size=9;2
+
+modules-left = 
+modules-center =
+modules-right = player aria
+
+;========================================================================
+;				  bottom-bar2
+;========================================================================
+[bar/bottom-bar2]
+#monitor = ${env:MONITOR:DVI-I-0}
+width = 100%
+height = 19
+offset-x = 0
+offset-y = 0
+bottom = true
+radius = 0.0
+fixed-center = false
+background = ${colors.background-transparent}
+foreground = ${colors.foreground}
+line-size = 1
+line-color =
+border-size = 
+border-color = 
+padding-left = 0
+padding-right = 0
+module-margin-left = 0
+module-margin-right = 0
+separator = 
+locale = pt_BR.UTF-8
+override-redirect = no
+;wm-restack = 
+;cursor-click = pointer
+;cursor-scroll = pointer
+;enable-ipc = true
+;double-click-left = polybar-msg cmd restart &
+click-left = 
+click-middle = 
+click-right = 
+scroll-up =
+scroll-down =
+
+; Position of the system tray window
+; If empty or undefined, tray support will be disabled
+; NOTE: A center aligned tray will cover center aligned modules
+;
+; Available positions:
+;   left
+;   center
+;   right
+;   none
+tray-position = none
+
+font-0 = Noto Sans:size=9;2
+font-1 = FontAwesome:pixelsize=10;2
+font-2 = Font Awesome 5 Free Solid:pixelsize=10;2
+font-3 = Font Awesome 5 Free:pixelsize=10;2
+font-4 = Font Awesome 5 Brands:pixelsize=10;2
+font-5 = Material Icons:pixelsize=12;3
+font-6 = Noto Serif:size=9;2
+font-7 = Noto Serif:bold:size=9;2
+
+modules-left = workspaces-alt
+modules-center = 
+modules-right = eth bluetooth battery updates gedit assistant settings
+
+;============================= updates ==================================
+
+[module/updates]
+type = custom/script
+
+exec = ~/.config/polybar/scripts/updates.sh
+interval = 1800
+
+;icon is set in the script  
+format-prefix = 
+format-prefix-foreground = 
+label = " %output% "
+format-foreground = ${colors.foreground-icon}
+
+click-left = deepin-terminal -e yay -Syu &
+click-middle = 
+click-right = pamac-manager --updates &
+
+;============================== gedit====================================
+
+[module/gedit]
+type = custom/text
+
+;
+content = "  "
+content-background = 
+content-foreground = ${colors.foreground-icon}
+content-padding = 
+
+click-left = gedit &
+click-middle = 
+click-right = gedit &
+
+;============================= settings =================================
+
+[module/settings]
+type = custom/text
+
+content = "  "
+content-background = 
+content-foreground = ${colors.foreground-icon}
+content-padding = 
+
+click-left = dde-control-center -s &
+click-middle = 
+click-right =
+
+;============================ workspaces ================================
+
+[module/workspaces]
+type = internal/xworkspaces
+
+icon-0 = Workspace 1;♚
+icon-1 = Workspace 2;♛
+icon-2 = Workspace 3;♜
+icon-3 = Workspace 4;♝
+icon-4 = Workspace 5;♞
+icon-default = ♟
+
+pin-workspaces = true
+enable-click = true
+enable-scroll = true
+
+; Available tokens:
+;   %name%
+;   %icon%
+;   %index%
+; Default: %icon%  %name%
+
+label-active-font = 8
+label-active = %index%
+label-active-foreground = ${colors.foreground-icon}
+label-active-background = ${colors.workspace-active}
+;label-active-background = #2CA7F8
+label-active-underline = 
+label-active-padding = 4
+
+label-occupied-font = 1
+label-occupied = %index%
+label-occupied-foreground = #09FF00
+label-occupied-background = 
+label-occupied-underline = 
+label-occupied-padding = 4
+
+label-urgent-font = 1
+label-urgent = %index%
+label-urgent-foreground = #FF0000
+label-urgent-background = 
+label-urgent-underline = 
+label-urgent-padding = 4
+
+label-empty-font = 1
+label-empty = %index%
+label-empty-foreground = ${colors.foreground}
+label-empty-background = 
+label-empty-underline = 
+label-empty-padding = 4
+
+;========================== workspaces-alt===============================
+
+[module/workspaces-alt]
+type = internal/xworkspaces
+
+label-active = 
+#label-active-foreground = #AA00E2B5
+label-active-foreground = #AAAF0CBA
+label-active-background = 
+label-active-padding = 2
+
+label-empty = 
+label-empty-foreground = ${colors.foreground}
+label-empty-background = 
+label-empty-padding = 2
+
+;=============================== cpu ====================================
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+
+format-prefix = "  "
+format-prefix-foreground = ${colors.foreground-icon}
+format-foreground = ${colors.foreground}
+format-background = 
+format-padding = 
+label = %percentage:2%%
+
+;============================== mem =====================================
+
+[module/mem]
+type = internal/memory
+interval = 2
+
+; Available tokens:
+;   %percentage_used% (default)
+;   %percentage_free%
+;   %gb_used%
+;   %gb_free%
+;   %gb_total%
+;   %mb_used%
+;   %mb_free%
+;   %mb_total%
+;   %percentage_swap_used%
+;   %percentage_swap_free%
+;   %mb_swap_total%
+;   %mb_swap_free%
+;   %mb_swap_used%
+;   %gb_swap_total%
+;   %gb_swap_free%
+;   %gb_swap_used%
+format-prefix = "    "
+format-prefix-foreground = ${colors.foreground-icon}
+format-foreground = ${colors.foreground}
+format-background = 
+format-padding = 
+#label = %percentage_used%%
+label = %gb_used%
+
+;========================= eth ================================
+[module/eth]
+type = internal/network
+interface = wlp2s0
+interval = 1.0
+accumulate-stats = true
+
+format-connected-prefix =
+format-connected-prefix-foreground = ${colors.foreground-icon}
+format-connected = <label-connected>
+format-disconnected = <label-disconnected>
+label-connected = " %downspeed%   %upspeed% "
+label-disconnected = 
+
+;========================= battery ================================
+
+[module/battery]
+type = internal/battery
+
+click-left = exec dbus-send --print-reply --dest=com.deepin.dde.ControlCenter /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.ShowModule string:power
+
+; This is useful in case the battery never reports 100% charge
+full-at = 99
+; Use the following command to list batteries and adapters:
+; $ ls -1 /sys/class/power_supply/
+battery = BAT0
+adapter = AC
+
+; If an inotify event haven't been reported in this many
+; seconds, manually poll for new values.
+; Needed as a fallback for systems that don't report events
+; on sysfs/procfs. Disable polling by setting the interval to 0.
+; Default: 5
+poll-interval = 30
+
+format-charging = <animation-charging> <label-charging>
+format-discharging = <ramp-capacity> <label-discharging>
+;format-full = <ramp-capacity> <label-full>
+
+label-charging = "%{A1:exec dbus-send --print-reply --dest=com.deepin.dde.ControlCenter /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.ShowModule string\:power:}%percentage%%%{A}"
+animation-charging-0 = " %{A1:exec dbus-send --print-reply --dest=com.deepin.dde.ControlCenter /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.ShowModule string\:power:}%{A}"
+animation-charging-1 = " %{A1:exec dbus-send --print-reply --dest=com.deepin.dde.ControlCenter /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.ShowModule string\:power:}%{A}"
+animation-charging-2 = " %{A1:exec dbus-send --print-reply --dest=com.deepin.dde.ControlCenter /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.ShowModule string\:power:}%{A}"
+animation-charging-3 = " %{A1:exec dbus-send --print-reply --dest=com.deepin.dde.ControlCenter /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.ShowModule string\:power:}%{A}"
+animation-charging-framerate = 1250
+
+label-discharging = " %{A1:exec dbus-send --print-reply --dest=com.deepin.dde.ControlCenter /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.ShowModule string\:power:}%percentage%%%{A}"
+ramp-capacity-0 = " %{A1:exec dbus-send --print-reply --dest=com.deepin.dde.ControlCenter /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.ShowModule string\:power:}%{A}"
+ramp-capacity-1 = " %{A1:exec dbus-send --print-reply --dest=com.deepin.dde.ControlCenter /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.ShowModule string\:power:}%{A}"
+ramp-capacity-2 = " %{A1:exec dbus-send --print-reply --dest=com.deepin.dde.ControlCenter /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.ShowModule string\:power:}%{A}"
+ramp-capacity-3 = " %{A1:exec dbus-send --print-reply --dest=com.deepin.dde.ControlCenter /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.ShowModule string\:power:}%{A}"
+ramp-capacity-4 = " %{A1:exec dbus-send --print-reply --dest=com.deepin.dde.ControlCenter /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.ShowModule string\:power:}%{A}"
+
+label-full = "%{A1:exec dbus-send --print-reply --dest=com.deepin.dde.ControlCenter /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.ShowModule string\:power:}   %{A}"
+
+;========================= bluetooth ================================
+
+[module/bluetooth]
+type = custom/script
+exec = ~/.config/polybar/scripts/bluetooth.sh
+interval = 10
+click-left = exec ~/.config/polybar/scripts/toggle_bluetooth.sh
+click-right = exec dbus-send --print-reply --dest=com.deepin.dde.ControlCenter /com/deepin/dde/ControlCenter com.deepin.dde.ControlCenter.ShowModule string:bluetooth
+format-padding = 1
+
+;========================= player ================================
+
+[module/player]
+type = custom/script
+exec = ~/.config/polybar/scripts/player.sh
+exec-if = pgrep -x vlc
+interval = 2
+
+;========================= assistant =============================
+
+[module/assistant]
+type = custom/text
+content = "  "
+click-left = "albert & sleep 0.1; albert toggle"
+
+;========================= aria =============================
+[module/aria]
+type = custom/script
+exec = ~/.config/polybar/scripts/aria2.sh
+click-left =  ~/.config/polybar/scripts/aria2.sh click &
+tail = true

@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+if [[ -z "$1" ]]; then
+    exit 1
+fi
+
+host='http://192.168.0.2'
+port=''
+secret=''
+
+run="aria2p"
+# if there is no local aria2c, send to remote 
+if [[ -z "$(pgrep aria2c)" ]]; then
+    run="$run --host $host"
+fi
+
+if [[ -n "$port" ]]; then
+    run="$run --port $port"
+fi
+
+if [[ -n "$secret" ]]; then
+    run="$run --secret $secret"
+fi
+
+run="$run call changeGlobalOption -J '[{\"max-overall-download-limit\":\"'$1'\"}]'"
+eval "$run"

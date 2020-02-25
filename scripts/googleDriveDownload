@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+# Script to download files from Google Drive
+# Usage: googleDriveDownload "FILE-ID"
+# FILE-ID is the string in the URL of the file
+# Ex: https://drive.google.com/file/d/AAABBBCCC/view
+# The FILE-ID will be "AAABBBCCC"
+#
+# The script do not use the built-in feature of
+# curl to get the name of the file because in some
+# systems, when the feature is used, the download
+# couldn't be resumed. Instead, the script makes 
+# another request to get the file name
+
+if [ -z "$1" ]; then
+    echo "Need to pass the file id"
+    exit 1;
+fi
+
+# removes possible existing session cookies file
+rm '/tmp/cookies.txt' 2>/dev/null
+
+# gets file name
+fileName=$(curl --silent \
+-H 'authority: drive.google.com' -H 'pragma: no-cache' -H 'cache-control: no-cache' -H 'dnt: 1' -H 'upgrade-insecure-requests: 1' -H 'user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.85 Safari/537.36' -H 'sec-fetch-dest: document' -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9' -H 'sec-fetch-site: none' -H 'sec-fetch-mode: navigate' -H 'accept-language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7' \
+"https://drive.google.com/file/d/$1/view" | grep -oP "(?<=title': ').*?(?=\',)")
+
+if [ -z "$fileName" ]; then
+    echo "Could not find file name"
+    exit 1;
+fi
+
+echo $fileName
+
+# gets html of download page
+downloadPage=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies \
+-H 'authority: drive.google.com' -H 'pragma: no-cache' -H 'cache-control: no-cache' -H 'dnt: 1' -H 'upgrade-insecure-requests: 1' -H 'user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.85 Safari/537.36' -H 'sec-fetch-dest: document' -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9' -H 'sec-fetch-site: none' -H 'sec-fetch-mode: navigate' -H 'accept-language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7' \
+-O- "https://docs.google.com/uc?export=download&id=$1")
+
+if [[ $downloadPage == *"uc-error-caption"* ]]; then 
+    echo "Probably this file was downloaded too many times. Try again later."
+    exit 1;
+fi
+
+# gets confirm code on the html
+confirmCode=$(echo $downloadPage | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')
+
+# do the download
+curl -L --cookie '/tmp/cookies.txt' -C - -o "$fileName" \
+-H 'authority: drive.google.com' -H 'pragma: no-cache' -H 'cache-control: no-cache' -H 'dnt: 1' -H 'upgrade-insecure-requests: 1' -H 'user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.85 Safari/537.36' -H 'sec-fetch-dest: document' -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9' -H 'sec-fetch-site: none' -H 'sec-fetch-mode: navigate' -H 'accept-language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7' \
+"https://docs.google.com/uc?export=download&confirm=${confirmCode}&id=$1" && rm '/tmp/cookies.txt'
+
